@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Manager</title>
+</head>
+<body>
+
+    <header>
+        <h1>Image Manager Web</h1>
+        <p>Plataforma de gestão e partilha de imagens</p>
+    </header>
+
+    <nav>
+        <a href="{{ url_for('index') }}">Início</a> |
+        <a href="{{ url_for('dashboard') }}">Dashboard</a> |
+        <a href="{{ url_for('categorias') }}">Categorias</a> |
+        <a href="{{ url_for('login') }}">Login</a>
+    </nav>
+
+    <main>
+        <h2>Bem-vindo</h2>
+        <p>
+            Esta aplicação permite carregar imagens, organizá-las por categorias
+            e interagir através de comentários.
+        </p>
+    </main>
+
+    <footer>
+        <p>Projeto de grupo - AED</p>
+    </footer>
+
+</body>
+</html>

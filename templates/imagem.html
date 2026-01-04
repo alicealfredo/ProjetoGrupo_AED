@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imagem</title>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">Início</a> |
+        <a href="{{ url_for('dashboard') }}">Dashboard</a> |
+        <a href="{{ url_for('categorias') }}">Categorias</a> |
+        <a href="{{ url_for('login') }}">Login</a>
+    </nav>
+    
+    <h1>Detalhes da Imagem</h1>
+
+    <img src="#" alt="Imagem grande" width="300">
+
+    <p>Categoria: Natureza</p>
+    <p>Enviada por: João</p>
+
+    <h2>Comentários</h2>
+
+    <p><strong>João:</strong> Linda foto!</p>
+
+    <form method="POST" action="{{ url_for('dashboard') }}">
+        <textarea name="comentario"></textarea><br><br>
+        <button type="submit">Comentar</button>
+    </form>
+
+</body>
+</html>

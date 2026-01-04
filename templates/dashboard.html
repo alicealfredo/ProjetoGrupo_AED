@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">Início</a> |
+        <a href="{{ url_for('dashboard') }}">Dashboard</a> |
+        <a href="{{ url_for('categorias') }}">Categorias</a> |
+        <a href="{{ url_for('login') }}">Login</a>
+    </nav>
+    
+    <header>
+        <h1>Painel do Utilizador</h1>
+        <a href="{{ url_for('index') }}">Logout</a>
+    </header>
+
+    <section>
+        <h2>Upload de Imagem</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="imagem"><br><br>
+
+            <label>Categoria:</label>
+            <select name="categoria">
+                <option>Natureza</option>
+                <option>Animais</option>
+            </select><br><br>
+
+            <button type="submit">Enviar</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Galeria</h2>
+
+        <div>
+            <img src="#" alt="Imagem exemplo" width="150">
+            <p>Categoria: Natureza</p>
+            <a href="imagem.html">Ver detalhes</a>
+        </div>
+
+    </section>
+
+</body>
+</html>
