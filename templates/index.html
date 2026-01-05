@@ -10,25 +10,49 @@
 <body>
 
     <nav class="nav">
-        <a class="nav-link active" aria-current="page" href="/templates/index.html">Início</a>
-        <a class="nav-link" href="/templates/dashboard.html">Dashboard</a>
-        <a class="nav-link" href="/templates/categorias.html">Categorias</a>
+        <div id="navbarLinks">
+            <a class="nav-link active" aria-current="page" href="/templates/index.html">Home</a>
+            <a class="nav-link" href="/templates/dashboard.html">Dashboard</a>
+            <a class="nav-link" href="/templates/categorias.html">Categorias</a>
+        </div>
         <div id="botaoLogin">
             <a class="nav-link" href="/templates/login.html">Login</a>
         </div>
     </nav>
-
     <header>
         <h1>Image Manager Web</h1>
         <p>Plataforma de gestão e partilha de imagens</p>
     </header>
 
     <main>
-        <h2>Bem-vindo</h2>
-        <p>
-            Esta aplicação permite carregar imagens, organizá-las por categorias
-            e interagir através de comentários.
-        </p>
+        <div id="containerCards">
+            <div class="card" style="width: 28rem;">
+                <img src="/static/imagens_upload/element5-digital-ceWgSMd8rvQ-unsplash.jpg" class="card-img-top" alt="imagemBeleza01">
+                <div class="card-body">
+                    <a href="#" class="card-link">Beleza</a>
+                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/estrela.svg"></a>
+                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/deslike.svg"></a>
+                </div>
+            </div>
+            <div class="card" style="width: 28rem;">
+                <img src="/static/imagens_upload/intricate-explorer-Xfdi4BSut_Q-unsplash.jpg" class="card-img-top" alt="imagemBeleza01">
+                <div class="card-body">
+                    <a href="#" class="card-link">Natureza</a>
+                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/estrela.svg"></a>
+                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/deslike.svg"></a>
+                </div>
+            </div>
+            <div class="card" style="width: 28rem;">
+                <img src="/static/imagens_upload/element5-digital-ceWgSMd8rvQ-unsplash.jpg" class="card-img-top" alt="imagemBeleza01">
+                <div class="card-body">
+                    <a href="#" class="card-link">Beleza</a>
+                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/estrela.svg"></a>
+                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/deslike.svg"></a>
+                </div>
+            </div>
+
+        </div>
+
     </main>
 
     <footer>
