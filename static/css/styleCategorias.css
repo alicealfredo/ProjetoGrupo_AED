@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body {
     background-color: #fdf5c9; /* Fundo bege claro */
     font-family: Arial, sans-serif;
@@ -47,3 +48,73 @@ input {
     color: #333;
     font-size: 18px;
 }
+=======
+
+* {
+    box-sizing: border-box;
+}
+
+/* Corpo */
+body {
+    background-color: #fff7c8;
+    color: #540B0E;
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #F4D35E;
+    border-radius: 0 0 10px 10px;
+}
+
+.navbar .nav-link {
+    color: #540B0E;
+    font-weight: 500;
+}
+
+.navbar .nav-link:hover {
+    color: #9E2A2B;
+}
+
+form button {
+    background-color: #540B0E;
+    color: #F4D35E;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+}
+
+form button:hover {
+    background-color: #9E2A2B;
+    cursor: pointer;
+}
+
+h1 {
+    text-align: center;
+    margin: 30px 0 20px;
+    font-weight: bold;
+}
+
+ul {
+    list-style: none;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+ul li {
+    background-color: #F4D35E;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 600;
+}
+
+ul li:hover {
+    background-color: #9E2A2B;
+    color: #fff7c8;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+>>>>>>> main

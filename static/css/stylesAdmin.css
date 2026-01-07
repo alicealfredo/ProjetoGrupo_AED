@@ -1,0 +1,117 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+    background-color: #fff7c8;
+    margin: 10px;
+    color: #540B0E;
+}
+/* Container principal */
+.admin-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* Título principal */
+h1 {
+    color: #540B0E;
+    font-weight: bold;
+}   
+
+/* Cards */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #5b1d1d;
+}
+
+/* Lista de utilizadores */
+.user-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.user-item:last-child {
+  border-bottom: none;
+}
+
+.user-info {
+  font-weight: 500;
+}
+
+/* Botões */
+.btn {
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-left: 6px;
+  transition: background 0.2s ease;
+}
+
+.btn-block {
+  background: #d4a017;
+  color: #fff;
+}
+
+.btn-block:hover {
+  background: #b58a13;
+}
+
+.btn-remove {
+  background: #8b1e1e;
+  color: #fff;
+}
+
+.btn-remove:hover {
+  background: #6f1818;
+}
+
+/* Form criar categoria */
+.form-group {
+  display: flex;
+  gap: 10px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #8b1e1e;
+}
+
+.btn-add {
+  background: #8b1e1e;
+  color: #fff;
+}
+
+.btn-add:hover {
+  background: #6f1818;
+}
