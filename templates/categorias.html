@@ -32,13 +32,21 @@
             </div>
         </div>
     </nav>
-    
+
     <h1>Categorias</h1>
 
-    <ul>
-        <li>Natureza</li>
-        <li>Animais</li>
-    </ul>
+    <div class="search-container">
+        <input type="text" class="input-large">
+        <input type="text" placeholder="Search" class="input-large">
+        
+        <button class="btn-brown">Filtrar</button>
+        <button class="btn-brown">Ordenar</button>
+        <button class="btn-brown">Sort Rating</button>
+    </div>
+
+    <div class="table-wrapper">
+        {{ categoryTable|safe }}
+    </div>
 
 </body>
 </html>

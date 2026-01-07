@@ -1,0 +1,11 @@
+Categorias
+Estilo de Vida
+Arquitetura
+Tecnologia
+Cinema
+Arte
+Entretenimento
+Natureza
+Saúde
+Alimentos
+Beleza
