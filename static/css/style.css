@@ -10,42 +10,15 @@ footer {
     background-color: #F4D35E;
     border-radius: 10px;
 }
-#navbarLinks {
-    display: flex;
-    gap: 30px;
-}
 nav {
     gap: 50px;
     justify-content: space-between;
-}
-#navbarLinks a {
-    color: #540B0E;
-}
-#navbarLinks a:hover {
-    color: #9E2A2B;
-}
-#botaoLogin {
-    background-color: #540B0E;
-    border-radius: 5px;
-}
-#botaoLogin:hover{
-    background-color: #9E2A2B;
-    border-radius: 5px;
-}
-#botaoLogin a {
-    color: white;
-    padding: 5px 10px;
+    background-color: #F4D35E;
 }
 h1 {
     color: #540B0E;
     font-weight: bold;
-}
-header {
-    text-align: center;
-}
-.cardImagem {
-    display:flex;
-}
+}   
 a {
     text-decoration: none;
     color: #540B0E;
@@ -53,12 +26,10 @@ a {
 a:hover {
     color: #9E2A2B;
 }
-.card {
-    border-radius: 30px;
-}
-#containerCards {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    gap: 20px;
-    justify-content: center;
+button {
+    color:#F4D35E;
+    border-radius: 5px;
+    background-color: #540B0E;
+    padding-inline: 10px;
+    border-style: none;
 }

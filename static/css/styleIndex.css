@@ -1,0 +1,15 @@
+header {
+    text-align: center;
+}
+.cardImagem {
+    display:flex;
+}
+.card {
+    border-radius: 30px;
+}
+#containerCards {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 20px;
+    justify-content: center;
+}
