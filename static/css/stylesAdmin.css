@@ -18,10 +18,9 @@ body {
 
 /* Título principal */
 h1 {
-  text-align: center;
-  margin-bottom: 40px;
-  color: #5b1d1d;
-}
+    color: #540B0E;
+    font-weight: bold;
+}   
 
 /* Cards */
 .card {
