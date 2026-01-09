@@ -1,4 +1,4 @@
-header {
+#containerInicial {
     text-align: center;
 }
 .cardImagem {
@@ -12,4 +12,15 @@ header {
     grid-template-columns: auto auto auto;
     gap: 20px;
     justify-content: center;
+}
+.cards img {
+    height: 300px;
+}
+#cardUploadImagens {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+#card02, #card03 {
+    border: 0px;
 }

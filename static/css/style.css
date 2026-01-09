@@ -27,10 +27,34 @@ a {
 a:hover {
     color: #9E2A2B;
 }
-button {
+button, .button {
     color:#F4D35E;
     border-radius: 5px;
     background-color: #540B0E;
-    padding-inline: 10px;
+    padding: 10px;
     border-style: none;
+}
+ul {
+    list-style: none;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+ul li {
+    background-color: #F4D35E;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+ul li:hover {
+    background-color: #d63b3d;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+ul li a :hover {
+    cursor: pointer;
+    color: #fff7c8;
 }

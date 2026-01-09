@@ -14,44 +14,30 @@ def get_categorias():
             categorias = linhas[1:]
     return categorias
 
-@app.route('/')
+@app.route("/")
 def index():
-    categorias = get_categorias()
-    
-    # Gerando a tabela HTML
-    html = '<table class="cat-table"><tbody>'
-    for cat in categorias:
-        html += f'<tr><td>{cat}</td></tr>'
-    html += '</tbody></table>'
-    
-    return render_template('categorias.html', categoryTable=html)
+    return render_template("index.html")
 
-# @app.route("/")
-# def index():
-#     return render_template("index.html")
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
 
-# @app.route("/dashboard")
-# def dashboard():
-#     return render_template("dashboard.html")
+@app.route("/categorias")
+def categorias():
+    lista = get_categorias()
+    # Tabela
+    tabela_html = '<table class="table-custom"><thead><tr><th>Categoria</th></tr></thead><tbody>'
+    for item in lista:
+        tabela_html += f'<tr><td>{item}</td></tr>'
+    tabela_html += '</tbody></table>'
 
-# @app.route("/categorias")
-# def categorias():
-#     return render_template("categorias.html")
+    return render_template('categorias.html', categoryTable=tabela_html)
 
-# @app.route('/')
-# def index():
-#     lista = carregar_categorias()
-#     # Tabela
-#     tabela_html = '<table class="table-custom"><thead><tr><th>Categoria</th></tr></thead><tbody>'
-#     for item in lista:
-#         tabela_html += f'<tr><td>{item}</td></tr>'
-#     tabela_html += '</tbody></table>'
+@app.route("/login")
+def login():
+    return render_template("login.html")
 
-#     return render_template('categorias.html', categoryTable=tabela_html)
 
-# @app.route("/login")
-# def login():
-#     return render_template("login.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

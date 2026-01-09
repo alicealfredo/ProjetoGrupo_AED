@@ -9,66 +9,113 @@
     <title>Image Manager</title>
 </head>
 <body>
-    
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/templates/index.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/templates/dashboard.html">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/templates/categorias.html">Categorias</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/templates/login.html">Login</a>
-                </li>
-            </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button type="submit">Search</button>
-            </form>
-            </div>
-        </div>
-    </nav>
-
     <header>
-        <br>
-        <h1>Image Manager Web</h1>
-        <p>Plataforma de gestão e partilha de imagens</p>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('categorias') }}">Categorias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button type="submit">Search</button>
+                </form>
+                </div>
+            </div>
+        </nav>
     </header>
-
     <main>
-        <div id="containerCards">
+        <br>
+        <div id="containerInicial">
+            <h1>Image Manager Web</h1>
+            <p>Plataforma de gestão e partilha de imagens</p>
+        </div>
+
+        <section id="containerCards">
             <div class="card" style="width: 28rem;">
-                <img src="/static/imagens_upload/element5-digital-ceWgSMd8rvQ-unsplash.jpg" class="card-img-top" alt="imagemBeleza01">
+                <img src="{{ url_for('static', filename='imagens/imagemBeleza_01.jpg') }}" class="card-img-top" alt="imagemBeleza01">
                 <div class="card-body">
                     <a href="#" class="card-link">Beleza</a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/estrela.svg"></a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/deslike.svg"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
                 </div>
             </div>
             <div class="card" style="width: 28rem;">
-                <img src="/static/imagens_upload/land-o-lakes-inc-1w3tO5F8HYY-unsplash.jpg" class="card-img-top" alt="imagemBeleza01">
+                <img src="{{ url_for('static', filename='imagens/imagemCidade_01.jpg') }}" class="card-img-top" alt="imagemBeleza01">
                 <div class="card-body">
                     <a href="#" class="card-link">Turismo</a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/estrela.svg"></a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/deslike.svg"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
                 </div>
             </div>
             <div class="card" style="width: 28rem;">
-                <img src="/static/imagens_upload/land-o-lakes-inc-lAB4lRUKc0Q-unsplash.jpg" class="card-img-top" alt="imagemBeleza01">
+                <img src="{{ url_for('static', filename='imagens/imagemDesporto_01.jpg') }}" class="card-img-top" alt="imagemBeleza01">
                 <div class="card-body">
                     <a href="#" class="card-link">Desporto</a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/estrela.svg"></a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/deslike.svg"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
                 </div>
             </div>
-        </div>
+            <div class="card" style="width: 28rem;">
+                <img src="{{ url_for('static', filename='imagens/imagemGastronomia_01.jpg') }}" class="card-img-top" alt="imagemBeleza01">
+                <div class="card-body">
+                    <a href="#" class="card-link">Gastronomia</a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
+                </div>
+            </div>
+            <div class="card" style="width: 28rem;">
+                <img src="{{ url_for('static', filename='imagens/imagemTecnologia_01.jpg') }}" class="card-img-top" alt="imagemBeleza01"> 
+                <div class="card-body">
+                    <a href="#" class="card-link">Tecnologia</a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
+                </div>
+            </div>
+            <div class="card" style="width: 28rem;">
+                <img src="{{ url_for('static', filename='imagens/imagemNatureza_01.jpg') }}" class="card-img-top" alt="imagemBeleza01">
+                <div class="card-body">
+                    <a href="#" class="card-link">Natureza</a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
+                </div>
+            </div>
+        </section>
+        <br><br>
 
+        <section id="cardUploadImagens">
+            <div class="card col-5" id="card02">
+                <div class="card-header">
+                    Novidade
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Dashboard do Usuário</h5>
+                    <p class="card-text">Faça uploads de imagens e construa o seu painel.</p>
+                    <a href="#" class="button">Fazer Upload</a>
+                </div>
+            </div>
+            <div class="card col-5" id="card03">
+                <div class="card-header">
+                    Novidade
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Dashboard do Usuário</h5>
+                    <p class="card-text">Faça uploads de imagens e construa o seu painel.</p>
+                    <a href="#" class="button">Fazer Upload</a>
+                </div>
+            </div>
+        </section>
 
     </main>
 
