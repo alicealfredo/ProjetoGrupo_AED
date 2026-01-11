@@ -1,22 +1,24 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import os
 
 app = Flask(__name__)
 
-def get_categorias():
-    categorias = []
-    caminho = 'categorias.txt'
-    if os.path.exists(caminho):
-        with open(caminho, 'r', encoding='utf-8') as f:
-            # Lendo todas as linhas e removendo espaços em branco
-            linhas = [linha.strip() for linha in f.readlines() if linha.strip()]
-            # Ignora a primeira linha que contém o título do arquivo 
-            categorias = linhas[1:]
-    return categorias
+# Lista das imagens existentes na pasta static/imagens
+IMAGES = [
+    {"arquivo": "imagemBeleza_01.jpg", "categoria": "Beleza"},
+    {"arquivo": "imagemBeleza_02.jpg", "categoria": "Beleza"},
+    {"arquivo": "imagemCidade_01.jpg", "categoria": "Cidade"},
+    {"arquivo": "imagemDesporto_01.jpg", "categoria": "Desporto"},
+    {"arquivo": "imagemGastronomia_01.jpg", "categoria": "Gastronomia"},
+    {"arquivo": "imagemNatureza_01.jpg", "categoria": "Natureza"},
+    {"arquivo": "imagemTecnologia_01.jpg", "categoria": "Tecnologia"},
+    {"arquivo": "imagemTecnologia_02.jpg", "categoria": "Tecnologia"},
+    {"arquivo": "imagemGastronomia_02.jpg", "categoria": "Gastronomia"},
+]
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", imagens=IMAGES)
 
 @app.route("/dashboard")
 def dashboard():
@@ -24,19 +26,11 @@ def dashboard():
 
 @app.route("/categorias")
 def categorias():
-    lista = get_categorias()
-    # Tabela
-    tabela_html = '<table class="table-custom"><thead><tr><th>Categoria</th></tr></thead><tbody>'
-    for item in lista:
-        tabela_html += f'<tr><td>{item}</td></tr>'
-    tabela_html += '</tbody></table>'
-
-    return render_template('categorias.html', categoryTable=tabela_html)
+    return render_template('categorias.html')
 
 @app.route("/login")
 def login():
     return render_template("login.html")
-
 
 
 if __name__ == "__main__":
