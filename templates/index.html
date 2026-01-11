@@ -46,7 +46,7 @@
             <div class="card" style="width: 28rem;">
                 <img src="{{ url_for('static', filename='imagens/imagemBeleza_01.jpg') }}" class="card-img-top" alt="imagemBeleza01">
                 <div class="card-body">
-                    <a href="#" class="card-link">Beleza</a>
+                    <a href="{{ url_for('categorias') }}" class="card-link">Beleza</a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
                 </div>
@@ -54,7 +54,7 @@
             <div class="card" style="width: 28rem;">
                 <img src="{{ url_for('static', filename='imagens/imagemCidade_01.jpg') }}" class="card-img-top" alt="imagemBeleza01">
                 <div class="card-body">
-                    <a href="#" class="card-link">Turismo</a>
+                    <a href="{{ url_for('categorias') }}" class="card-link">Turismo</a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
                 </div>
@@ -62,7 +62,7 @@
             <div class="card" style="width: 28rem;">
                 <img src="{{ url_for('static', filename='imagens/imagemDesporto_01.jpg') }}" class="card-img-top" alt="imagemBeleza01">
                 <div class="card-body">
-                    <a href="#" class="card-link">Desporto</a>
+                    <a href="{{ url_for('categorias') }}" class="card-link">Desporto</a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
                 </div>
@@ -70,7 +70,7 @@
             <div class="card" style="width: 28rem;">
                 <img src="{{ url_for('static', filename='imagens/imagemGastronomia_01.jpg') }}" class="card-img-top" alt="imagemBeleza01">
                 <div class="card-body">
-                    <a href="#" class="card-link">Gastronomia</a>
+                    <a href="{{ url_for('categorias') }}" class="card-link">Gastronomia</a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
                 </div>
@@ -78,7 +78,7 @@
             <div class="card" style="width: 28rem;">
                 <img src="{{ url_for('static', filename='imagens/imagemTecnologia_01.jpg') }}" class="card-img-top" alt="imagemBeleza01"> 
                 <div class="card-body">
-                    <a href="#" class="card-link">Tecnologia</a>
+                    <a href="{{ url_for('categorias') }}" class="card-link">Tecnologia</a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
                 </div>
@@ -86,7 +86,7 @@
             <div class="card" style="width: 28rem;">
                 <img src="{{ url_for('static', filename='imagens/imagemNatureza_01.jpg') }}" class="card-img-top" alt="imagemBeleza01">
                 <div class="card-body">
-                    <a href="#" class="card-link">Natureza</a>
+                    <a href="{{ url_for('categorias') }}" class="card-link">Natureza</a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}"></a>
                     <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg') }}"></a>
                 </div>
@@ -102,7 +102,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Dashboard do Usuário</h5>
                     <p class="card-text">Faça uploads de imagens e construa o seu painel.</p>
-                    <a href="#" class="button">Fazer Upload</a>
+                    <a href="{{ url_for('dashboard') }}" class="button">Fazer Upload</a>
                 </div>
             </div>
             <div class="card col-5" id="card03">
@@ -112,7 +112,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Dashboard do Usuário</h5>
                     <p class="card-text">Faça uploads de imagens e construa o seu painel.</p>
-                    <a href="#" class="button">Fazer Upload</a>
+                    <a href="{{ url_for('dashboard') }}" class="button">Fazer Upload</a>
                 </div>
             </div>
         </section>
