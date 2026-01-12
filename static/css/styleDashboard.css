@@ -1,0 +1,28 @@
+header {
+    text-align: center;
+}
+
+.card {
+    width: 30%;
+    border-radius: 30px;
+}
+
+.card-text {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 15px;
+}
+
+.cardUpload {
+    background-color: white;
+    padding: 20px;
+    border-radius: 30px;
+    width: 30%;
+}
+
+button {
+    border: none;
+    padding: 7px;
+    padding-inline: 10px;
+}

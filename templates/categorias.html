@@ -15,16 +15,16 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/templates/index.html">Home</a>
+                    <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/templates/dashboard.html">Dashboard</a>
+                    <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/templates/categorias.html">Categorias</a>
+                    <a class="nav-link" href="{{ url_for('categorias') }}">Categorias</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/templates/login.html">Login</a>
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
                 </li>
             </ul>
             <form class="d-flex">
@@ -36,11 +36,16 @@
     </nav>
     
     <h1>Categorias</h1>
-
-    <ul>
-        <li>Natureza</li>
-        <li>Animais</li>
-    </ul>
+    <div class="listaCategorias">
+        <ul>
+            <li>Beleza</li>
+            <li>Desporto</li>
+            <li>Gastronomia</li>
+            <li>Natureza</li>
+            <li>Tecnologia</li>
+            <li>Turismo</li>
+        </ul>
+    </div>
 
 </body>
 </html>
