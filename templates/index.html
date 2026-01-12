@@ -15,16 +15,16 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/templates/index.html">Home</a>
+                    <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/templates/dashboard.html">Dashboard</a>
+                    <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/templates/categorias.html">Categorias</a>
+                    <a class="nav-link" href="{{ url_for('categorias') }}">Categorias</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/templates/login.html">Login</a>
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
                 </li>
             </ul>
             <form class="d-flex">
@@ -44,27 +44,27 @@
     <main>
         <div id="containerCards">
             <div class="card" style="width: 28rem;">
-                <img src="/static/imagens_upload/element5-digital-ceWgSMd8rvQ-unsplash.jpg" class="card-img-top" alt="imagemBeleza01">
+                <img src="{{ url_for('static', filename='imagens/imagemBeleza_01.jpg')}}" class="card-img-top" alt="Imagem Beleza">
                 <div class="card-body">
-                    <a href="#" class="card-link">Beleza</a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/estrela.svg"></a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/deslike.svg"></a>
+                    <a href="{{ url_for('categorias') }}#" class="card-link">Beleza</a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg')}}"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg')}}"></a>
                 </div>
             </div>
             <div class="card" style="width: 28rem;">
-                <img src="/static/imagens_upload/land-o-lakes-inc-1w3tO5F8HYY-unsplash.jpg" class="card-img-top" alt="imagemBeleza01">
+                <img src="{{ url_for('static', filename='imagens/imagemTurismo_01.jpg')}}" class="card-img-top" alt="Imagem Turismo">
                 <div class="card-body">
-                    <a href="#" class="card-link">Turismo</a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/estrela.svg"></a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/deslike.svg"></a>
+                    <a href="{{ url_for('categorias') }}" class="card-link">Turismo</a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg')}}"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg')}}"></a>
                 </div>
             </div>
             <div class="card" style="width: 28rem;">
-                <img src="/static/imagens_upload/land-o-lakes-inc-lAB4lRUKc0Q-unsplash.jpg" class="card-img-top" alt="imagemBeleza01">
+                <img src="{{ url_for('static', filename='imagens/imagemDesporto_01.jpg')}}" class="card-img-top" alt="Imagem Desporto">
                 <div class="card-body">
-                    <a href="#" class="card-link">Desporto</a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/estrela.svg"></a>
-                    <a href="#" class="card-link"><img src="/static/imagens_upload/icons/deslike.svg"></a>
+                    <a href="{{ url_for('categorias') }}" class="card-link">Desporto</a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/estrela.svg')}}"></a>
+                    <a href="#" class="card-link"><img src="{{ url_for('static', filename='imagens/icons/deslike.svg')}}"></a>
                 </div>
             </div>
         </div>
