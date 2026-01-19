@@ -121,15 +121,18 @@ def index():
     )
 
 
-# Rota para guardar o favorito no CSV
+# No app.py, substitua a função favoritar por esta:
 @app.route("/favoritar")
 def favoritar():
     url_foto = request.args.get('url')
+    autor = request.args.get('autor', 'Anónimo')
+    titulo = request.args.get('titulo', 'Foto')
+    
     caminho_fav = 'data/favoritos.csv'
     
-    # Criamos o ficheiro se não existir e adicionamos a URL
+    # Salvamos os dados separados por TAB para manter o padrão
     with open(caminho_fav, 'a', encoding='utf-8') as f:
-        f.write(f"{url_foto}\n")
+        f.write(f"{url_foto}\t{titulo}\t{autor}\n")
         
     return redirect(url_for('index'))
 
