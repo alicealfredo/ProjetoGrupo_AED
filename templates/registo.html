@@ -22,12 +22,15 @@
             <input type="password" name="senha" class="inputForm"><br><br>
 
             <label>Interesses:</label><br>
-            <div class="mb-3">
+            <div class="mb-3 interesses">
                 {% for cat in ["Natureza", "Arquitetura", "Pessoas", "Paisagens", "Animais", "Arte"] %}
-                <input type="checkbox" name="interesses" value="{{ cat }}"> {{ cat }} &nbsp;
+                    <label class="interesse-item">
+                        <input type="checkbox" name="interesses" value="{{ cat }}">
+                        {{ cat }}
+                    </label>
                 {% endfor %}
             </div>
-
+            
             <button type="submit">Registar</button>
         </form>
     </main>
