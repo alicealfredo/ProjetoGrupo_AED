@@ -121,6 +121,7 @@ def index():
     )
 
 
+# No app.py, substitua a função favoritar por esta:
 @app.route("/favoritar")
 def favoritar():
     # Verifica se o utilizador está logado
@@ -134,9 +135,15 @@ def favoritar():
     
     # Cria um nome de ficheiro único por utilizador
     caminho_fav = f'data/favoritos_{email_user}.csv'
+    autor = request.args.get('autor', 'Anónimo')
+    titulo = request.args.get('titulo', 'Foto')
     
+    caminho_fav = 'data/favoritos.csv'
+    
+    # Salvamos os dados separados por TAB para manter o padrão
     with open(caminho_fav, 'a', encoding='utf-8') as f:
         # Guarda URL, Título e Autor separados por TAB
+        f.write(f"{url_foto}\t{titulo}\t{autor}\n")
         f.write(f"{url_foto}\t{titulo}\t{autor}\n")
         
     return redirect(url_for('index'))
