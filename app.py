@@ -121,43 +121,51 @@ def index():
     )
 
 
-# Rota para guardar o favorito no CSV
 @app.route("/favoritar")
 def favoritar():
-    url_foto = request.args.get('url')
-    caminho_fav = 'data/favoritos.csv'
+    # Verifica se o utilizador está logado
+    if "user" not in session:
+        return redirect(url_for('login'))
     
-    # Criamos o ficheiro se não existir e adicionamos a URL
+    email_user = session["user"]["email"]
+    url_foto = request.args.get('url')
+    autor = request.args.get('autor', 'Anónimo')
+    titulo = request.args.get('titulo', 'Foto')
+    
+    # Cria um nome de ficheiro único por utilizador
+    caminho_fav = f'data/favoritos_{email_user}.csv'
+    
     with open(caminho_fav, 'a', encoding='utf-8') as f:
-        f.write(f"{url_foto}\n")
+        # Guarda URL, Título e Autor separados por TAB
+        f.write(f"{url_foto}\t{titulo}\t{autor}\n")
         
     return redirect(url_for('index'))
 
 @app.route("/dashboard")
 def dashboard():
-    favoritos_urls = []
-    caminho_fav = 'data/favoritos.csv'
+    if "user" not in session:
+        return redirect(url_for('login'))
+
+    email_user = session["user"]["email"]
+    imagens_dashboard = []
+    caminho_fav = f'data/favoritos_{email_user}.csv'
     
-    # 1. Carregar URLs das imagens favoritadas
-    try:
-        if os.path.exists(caminho_fav):
-            with open(caminho_fav, 'r', encoding='utf-8') as f:
-                favoritos_urls = [linha.strip() for linha in f.readlines()]
-    except Exception:
-        pass
+    # 1. Carregar apenas os favoritos DESTE utilizador
+    if os.path.exists(caminho_fav):
+        with open(caminho_fav, 'r', encoding='utf-8') as f:
+            for linha in f:
+                partes = linha.strip().split('\t')
+                if len(partes) >= 3:
+                    imagens_dashboard.append({
+                        'photo_image_url': partes[0],
+                        'categoria': partes[1],
+                        'autor': partes[2],
+                        'tipo': 'favorito'
+                    })
 
-    # 2. Obter todas as imagens do sistema
-    todas_imagens = obter_imagens(n=1000) 
-
-    if todas_imagens and 'erro' in todas_imagens[0]:
-        return render_template("dashboard.html", images=[], erro=todas_imagens[0]['erro'])
-
-    # 3. FILTRAGEM DUPLA:
-    # Mostramos se a imagem está nos favoritos OU se foi carregada pelo "Admin"
-    imagens_dashboard = [
-        img for img in todas_imagens 
-        if img.get('photo_image_url') in favoritos_urls or img.get('autor') == "Admin"
-    ]
+    # 2. (Opcional) Adicionar os uploads feitos por este utilizador
+    # Se quiseres mostrar as fotos que este user fez upload, podes filtrar o photos.csv000
+    # usando o nome do utilizador logado: session["user"]["nome"]
 
     return render_template("dashboard.html", images=imagens_dashboard)
 
