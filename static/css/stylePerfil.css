@@ -1,0 +1,79 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #fff7c8;
+    color: #540B0E;
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar fixa */
+.navbar {
+    background-color: #F4D35E;
+    padding: 10px 20px;
+    border-radius: 0 0 10px 10px;
+}
+
+.navbar a {
+    color: #540B0E;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: 500;
+}
+
+.navbar a:hover {
+    color: #9E2A2B;
+}
+
+/* Search box */
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-box input {
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 1px solid #540B0E;
+}
+
+/* MAIN — */
+main {
+    margin-top: 90px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: #F4D35E;
+    padding: 30px;
+    border-radius: 15px;
+}
+
+/* Título */
+main h1 {
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Texto */
+main p {
+    margin-bottom: 10px;
+}
+
+/* Link sair */
+main a {
+    display: inline-block;
+    margin-top: 20px;
+    color: #F4D35E;
+    background-color: #540B0E;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+main a:hover {
+    background-color: #9E2A2B;
+}
