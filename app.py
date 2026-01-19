@@ -168,7 +168,7 @@ def dashboard():
     # Se quiseres mostrar as fotos que este user fez upload, podes filtrar o photos.csv000
     # usando o nome do utilizador logado: session["user"]["nome"]
 
-    return render_template("dashboard.html", images=imagens_dashboard)
+    return render_template("dashboard.html", images=imagens_dashboard)  
 
 @app.route("/upload", methods=["POST"])
 def upload_imagem():
