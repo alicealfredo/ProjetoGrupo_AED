@@ -23,7 +23,9 @@
                 {% endif %}
                 <form class="search-box" method="GET">
                     <input type="text" name="search" placeholder="Pesquise fotos e ilustrações" value="{{ search }}">
-                    <img type="submit" src="{{ url_for('static', filename='imagens/icons/search.svg')}}">
+                    <button type="submit" class="search-btn">
+                        <img src="{{ url_for('static', filename='imagens/icons/search.svg') }}">
+                    </button>
                 </form>
             </div>
         </nav>
