@@ -12,11 +12,10 @@ label {
     font-weight: 600;
 }
 
-button {
+.buttonRegisto {
     width: 100%;
     margin-top: 15px;
     padding: 10px;
-
     background-color: #540B0E;
     color: #F4D35E;
     border: none;
@@ -26,7 +25,8 @@ button {
     transition: background-color 0.2s ease;
 }
 
-button:hover {
+.buttonRegisto:hover {
     background-color: #9E2A2B;
     cursor: pointer;
+    color: #F4D35E;
 }
