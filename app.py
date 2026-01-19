@@ -163,10 +163,6 @@ def dashboard():
                         'tipo': 'favorito'
                     })
 
-    # 2. (Opcional) Adicionar os uploads feitos por este utilizador
-    # Se quiseres mostrar as fotos que este user fez upload, podes filtrar o photos.csv000
-    # usando o nome do utilizador logado: session["user"]["nome"]
-
     return render_template("dashboard.html", images=imagens_dashboard)
 
 @app.route("/upload", methods=["POST"])
