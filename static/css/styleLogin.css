@@ -39,13 +39,11 @@ button {
     width: 100%;
     margin-top: 15px;
     padding: 10px;
-
     background-color: #540B0E;
     color: #F4D35E;
     border: none;
     border-radius: 5px;
     font-weight: bold;
-
     transition: background-color 0.2s ease;
 }
 

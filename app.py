@@ -174,9 +174,9 @@ def dashboard():
 
     email_user = session["user"]["email"]
     imagens_dashboard = []
-    caminho_fav = f'data/favoritos_{email_user}.csv'
     
-    # 1. Carregar apenas os favoritos DESTE utilizador
+    # 1. Carregar Favoritos (Código que já tem)
+    caminho_fav = f'data/favoritos_{email_user}.csv'
     if os.path.exists(caminho_fav):
         with open(caminho_fav, 'r', encoding='utf-8') as f:
             for linha in f:
@@ -189,18 +189,33 @@ def dashboard():
                         'tipo': 'favorito'
                     })
 
-    # 2. (Opcional) Adicionar os uploads feitos por este utilizador
-    # Se quiseres mostrar as fotos que este user fez upload, podes filtrar o photos.csv000
-    # usando o nome do utilizador logado: session["user"]["nome"]
+    # 2. Carregar Uploads Próprios
+    caminho_fotos = 'data/photos.csv000'
+    if os.path.exists(caminho_fotos):
+        with open(caminho_fotos, 'r', encoding='utf-8') as f:
+            # Pulamos o cabeçalho se existir ou tratamos erro
+            for linha in f:
+                partes = linha.strip().split('\t')
+                # Verificamos se a linha tem o nosso e-mail no final (campo 5)
+                if len(partes) >= 6 and partes[5] == email_user:
+                    imagens_dashboard.append({
+                        'photo_image_url': partes[0],
+                        'categoria': partes[2],
+                        'autor': partes[3],
+                        'tipo': 'upload'
+                    })
 
-    return render_template("dashboard.html", images=imagens_dashboard)  
+    return render_template("dashboard.html", images=imagens_dashboard)
 
 @app.route("/upload", methods=["POST"])
 def upload_imagem():
+    if "user" not in session:
+        return redirect(url_for('login'))
+        
+    email_user = session["user"]["email"] # Obtém o e-mail do utilizador logado
     titulo = request.form.get("titulo")
     descricao = request.form.get("descricao")
-    # Capturamos o nome inserido no formulário (ou "Anónimo" se estiver vazio)
-    autor = request.form.get("autor") or "Anónimo" 
+    autor = request.form.get("autor") or session["user"]["nome"] # Usa o nome da sessão como fallback
     ficheiro = request.files.get("arquivo")
 
     if ficheiro and ficheiro.filename != '':
@@ -212,11 +227,11 @@ def upload_imagem():
             
         ficheiro.save(os.path.join(caminho_pasta, nome_ficheiro))
 
-        # Guarda no CSV usando a variável 'autor' em vez de "Admin"
+        # IMPORTANTE: Guardamos o e-mail no final da linha para filtragem posterior
         with open('data/photos.csv000', 'a', encoding='utf-8') as f:
             url = "/static/uploads/" + nome_ficheiro
-            # A ordem deve seguir: URL \t Descrição \t Categoria \t Autor \t Local
-            f.write(f"\n{url}\t{descricao}\t{titulo}\t{autor}\tLocal")
+            # Adicionamos o e-mail como um campo extra no final
+            f.write(f"\n{url}\t{descricao}\t{titulo}\t{autor}\tLocal\t{email_user}")
 
     return redirect(url_for('dashboard'))
 
