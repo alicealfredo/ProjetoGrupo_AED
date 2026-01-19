@@ -142,6 +142,31 @@ def favoritar():
         
     return redirect(url_for('index'))
 
+@app.route("/remover_favorito")
+def remover_favorito():
+    if "user" not in session:
+        return redirect(url_for('login'))
+    
+    email_user = session["user"]["email"]
+    url_remover = request.args.get('url')
+    caminho_fav = f'data/favoritos_{email_user}.csv'
+    
+    if os.path.exists(caminho_fav):
+        # 1. Ler todas as linhas atuais
+        linhas_restantes = []
+        with open(caminho_fav, 'r', encoding='utf-8') as f:
+            for linha in f:
+                # Se a URL na linha não for a que queremos remover, mantemos
+                if url_remover not in linha:
+                    linhas_restantes.append(linha)
+        
+        # 2. Sobreescrever o ficheiro com a nova lista (sem a imagem removida)
+        with open(caminho_fav, 'w', encoding='utf-8') as f:
+            for linha in linhas_restantes:
+                f.write(linha)
+                
+    return redirect(url_for('dashboard'))
+
 @app.route("/dashboard")
 def dashboard():
     if "user" not in session:
