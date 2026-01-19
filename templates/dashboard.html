@@ -15,8 +15,13 @@
                 <a href="{{ url_for('index') }}">Home</a>
                 <a href="{{ url_for('dashboard') }}">Dashboard</a>
                 <a href="{{ url_for('categorias') }}">Categorias</a>
+                
                 {% if session.get('user') %}
-                    <a href="{{ url_for('perfil') }}">Perfil</a>
+                    {% if session['user']['email'] == 'admin@gmail.com' %}
+                        <a href="{{ url_for('admin') }}">Painel Admin</a>
+                    {% else %}
+                        <a href="{{ url_for('perfil') }}">Perfil</a>
+                    {% endif %}
                     <a href="{{ url_for('logout') }}">Sair</a>
                 {% else %}
                     <a href="{{ url_for('login') }}">Login</a>
@@ -59,7 +64,7 @@
             </div>
 
             <div class="col-md-8">
-                <h4 class="mb-4">A Minha Galeria <span style="background-color: #540B0E;padding: 10px;border: none;border-radius: 5px;font-weight: bold;color: #F4D35E;">{{ images|length }}</span></h4>
+                <h4 class="mb-4">A Minha Galeria <span style="background-color: #540B0E;padding: 5px 10px;border: none;border-radius: 5px;font-weight: bold;color: #F4D35E;">{{ images|length }}</span></h4>
                 
                 <div class="row row-cols-1 row-cols-md-2 g-4">
                     {% if images %}
@@ -72,22 +77,27 @@
                                         <h6 class="card-title mb-1">{{ img.categoria }}</h6>
                                         
                                         {% if img.tipo == 'favorito' %}
-                                            <span class="badge bg-warning text-dark" style="font-size: 0.7rem;">Favorito</span>
+                                            <span class="badge text-dark" style="font-size: 0.7rem;background-color: #F4D35E;color: #540B0E;">Favorito</span>
                                         {% else %}
-                                            <span class="badge bg-info text-dark" style="font-size: 0.7rem;">O meu Upload</span>
+                                            <span class="badge" style="font-size: 0.7rem;background-color: #540B0E;color: #F4D35E;">O meu Upload</span>
                                         {% endif %}
                                     </div>
                                     
                                     <p class="card-text small text-muted">Por: {{ img.autor }}</p>
 
-                                    {% if img.tipo == 'favorito' %}
                                     <div class="mt-2 text-end">
-                                        <a href="{{ url_for('remover_favorito', url=img.photo_image_url) }}" 
-                                        class="text-danger small">
-                                        Remover 
-                                        </a>
+                                        {% if img.tipo == 'favorito' %}
+                                            <a href="{{ url_for('remover_favorito', url=img.photo_image_url) }}" 
+                                            class="text-danger small" style="text-decoration: none;">
+                                            Remover
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('remover_upload', url=img.photo_image_url) }}" 
+                                            class="text-danger small" style="text-decoration: none;">
+                                            Eliminar Upload 
+                                            </a>
+                                        {% endif %}
                                     </div>
-                                    {% endif %}
                                 </div>
                             </div>
                         </div>

@@ -212,27 +212,67 @@ def upload_imagem():
     if "user" not in session:
         return redirect(url_for('login'))
         
-    email_user = session["user"]["email"] # Obtém o e-mail do utilizador logado
+    # 1. Identificar o utilizador e definir o caminho da pasta individual
+    email_user = session["user"]["email"]
+    nome_pasta_user = email_user.replace("@", "_").replace(".", "_") # Limpa caracteres especiais
+    caminho_base = 'static/uploads'
+    caminho_user = os.path.join(caminho_base, nome_pasta_user)
+    
+    # 2. Criar a pasta do utilizador se não existir
+    if not os.path.exists(caminho_user):
+        os.makedirs(caminho_user)
+    
+    # 3. Processar os dados do formulário
     titulo = request.form.get("titulo")
     descricao = request.form.get("descricao")
-    autor = request.form.get("autor") or session["user"]["nome"] # Usa o nome da sessão como fallback
+    autor = request.form.get("autor") or session["user"]["nome"]
     ficheiro = request.files.get("arquivo")
 
     if ficheiro and ficheiro.filename != '':
         nome_ficheiro = ficheiro.filename.replace(" ", "_")
-        caminho_pasta = 'static/uploads'
-        
-        if not os.path.exists(caminho_pasta):
-            os.makedirs(caminho_pasta)
-            
-        ficheiro.save(os.path.join(caminho_pasta, nome_ficheiro))
+        # Guardar o ficheiro dentro da pasta do utilizador
+        caminho_final_disco = os.path.join(caminho_user, nome_ficheiro)
+        ficheiro.save(caminho_final_disco)
 
-        # IMPORTANTE: Guardamos o e-mail no final da linha para filtragem posterior
+        # 4. Guardar no CSV com o caminho relativo correto para o navegador
         with open('data/photos.csv000', 'a', encoding='utf-8') as f:
-            url = "/static/uploads/" + nome_ficheiro
-            # Adicionamos o e-mail como um campo extra no final
-            f.write(f"\n{url}\t{descricao}\t{titulo}\t{autor}\tLocal\t{email_user}")
+            # A URL agora inclui a subpasta do utilizador
+            url_navegador = f"/static/uploads/{nome_pasta_user}/{nome_ficheiro}"
+            f.write(f"\n{url_navegador}\t{descricao}\t{titulo}\t{autor}\tLocal\t{email_user}")
 
+    return redirect(url_for('dashboard'))
+
+@app.route("/remover_upload")
+def remover_upload():
+    if "user" not in session:
+        return redirect(url_for('login'))
+    
+    email_user = session["user"]["email"]
+    url_remover = request.args.get('url')
+    caminho_csv = 'data/photos.csv000'
+    
+    if os.path.exists(caminho_csv):
+        linhas_restantes = []
+        foto_apagada = False
+        
+        with open(caminho_csv, 'r', encoding='utf-8') as f:
+            for linha in f:
+                partes = linha.strip().split('\t')
+                # Validação: URL coincide e o e-mail (coluna 6) é do dono
+                if len(partes) >= 6 and partes[0] == url_remover and partes[5] == email_user:
+                    # Remove o ficheiro físico (limpa a barra inicial para o OS)
+                    caminho_fisico = partes[0].lstrip('/')
+                    if os.path.exists(caminho_fisico):
+                        os.remove(caminho_fisico)
+                    foto_apagada = True
+                    continue 
+                linhas_restantes.append(linha)
+        
+        if foto_apagada:
+            with open(caminho_csv, 'w', encoding='utf-8') as f:
+                for linha in linhas_restantes:
+                    f.write(linha if linha.endswith('\n') else linha + '\n')
+                
     return redirect(url_for('dashboard'))
 
 @app.route("/categorias")
@@ -272,7 +312,13 @@ def login():
         user_data = verificar_login(email, senha)
 
         if user_data:
-            session["user"] = user_data # Guarda nome e interesses na sessão
+            session["user"] = user_data
+            
+            # NOVO: Se o email for o do admin, vai para o painel de admin
+            if user_data['email'] == 'admin@gmail.com':
+                return redirect(url_for("admin"))
+            
+            # Caso contrário, vai para categorias como já estava
             return redirect(url_for("categorias"))
         else:
             return "Login inválido!"
@@ -301,6 +347,56 @@ def perfil():
         return redirect(url_for("login"))
 
     return render_template("perfil.html", user=session["user"])
+
+@app.route("/admin")
+def admin():
+    if "user" not in session or session["user"]["email"] != "admin@gmail.com":
+        return redirect(url_for('login'))
+
+    # 1. Estatísticas de Utilizadores
+    users_list = []
+    if os.path.exists(UTILIZADORES_BIN):
+        with open(UTILIZADORES_BIN, "rb") as f:
+            for linha in f:
+                dados = linha.decode("utf-8").strip().split("|")
+                if len(dados) >= 2:
+                    users_list.append({'nome': dados[0], 'email': dados[1]})
+
+    # 2. Estatísticas e Listagem de Fotos (Moderação)
+    todas_fotos = []
+    caminho_csv = 'data/photos.csv000'
+    if os.path.exists(caminho_csv):
+        with open(caminho_csv, 'r', encoding='utf-8') as f:
+            # Pula o cabeçalho se houver, ou trata como DictReader
+            reader = csv.DictReader(f, delimiter='\t')
+            for row in reader:
+                todas_fotos.append({
+                    'url': row.get('photo_image_url'),
+                    'titulo': row.get('photo_description', 'Sem título'),
+                    'autor': row.get('photographer_username', 'Anónimo'),
+                    'dono_email': row.get('email_user', 'Sistema') # Requer que o upload grave o email
+                })
+
+    return render_template("admin.html", 
+                           users=users_list, 
+                           photos=todas_fotos,
+                           stats={'total_users': len(users_list), 'total_photos': len(todas_fotos)})
+
+@app.route("/admin/banir/<email>")
+def banir_utilizador(email):
+    if "user" not in session or session["user"]["email"] != "admin@email.com":
+        return redirect(url_for('login'))
+
+    linhas_restantes = []
+    with open(UTILIZADORES_BIN, "rb") as f:
+        for linha in f:
+            if email not in linha.decode("utf-8"):
+                linhas_restantes.append(linha)
+    
+    with open(UTILIZADORES_BIN, "wb") as f:
+        for linha in linhas_restantes:
+            f.write(linha)
+    return redirect(url_for('admin_panel'))
 
 @app.route("/logout")
 def logout():
