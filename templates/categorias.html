@@ -15,8 +15,13 @@
                 <a href="{{ url_for('index') }}">Home</a>
                 <a href="{{ url_for('dashboard') }}">Dashboard</a>
                 <a href="{{ url_for('categorias') }}">Categorias</a>
+                
                 {% if session.get('user') %}
-                    <a href="{{ url_for('perfil') }}">Perfil</a>
+                    {% if session['user']['email'] == 'admin@gmail.com' %}
+                        <a href="{{ url_for('admin') }}">Painel Admin</a>
+                    {% else %}
+                        <a href="{{ url_for('perfil') }}">Perfil</a>
+                    {% endif %}
                     <a href="{{ url_for('logout') }}">Sair</a>
                 {% else %}
                     <a href="{{ url_for('login') }}">Login</a>

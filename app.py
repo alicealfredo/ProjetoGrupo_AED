@@ -278,7 +278,7 @@ def remover_upload():
 @app.route("/categorias")
 def categorias():
     # 1. Obter todas as imagens uma única vez para contar
-    todas = obter_imagens(n=5000) 
+    todas = obter_imagens(n=15000) 
     
     categorias_processadas = []
     for cat in CATEGORIAS_FIXAS:
@@ -370,12 +370,16 @@ def admin():
             # Pula o cabeçalho se houver, ou trata como DictReader
             reader = csv.DictReader(f, delimiter='\t')
             for row in reader:
+        
                 todas_fotos.append({
                     'url': row.get('photo_image_url'),
                     'titulo': row.get('photo_description', 'Sem título'),
                     'autor': row.get('photographer_username', 'Anónimo'),
                     'dono_email': row.get('email_user', 'Sistema') # Requer que o upload grave o email
                 })
+
+                if len(todas_fotos)>=50:
+                    break
 
     return render_template("admin.html", 
                            users=users_list, 
