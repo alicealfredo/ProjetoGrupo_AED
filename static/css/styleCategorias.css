@@ -52,7 +52,6 @@ h2 {
     color: #856404; /* Tom mais escuro de amarelo para o texto */
 }
 
-/* Badge do contador */
 .img-count-badge {
     background-color: var(--amarelo-navbar);
     color: #000;

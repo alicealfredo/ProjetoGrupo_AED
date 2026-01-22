@@ -36,6 +36,24 @@
         </nav>
     </header>
     <main class="container mt-5 pt-5">
+        <div class="container-fluid mb-5">
+            <div class="category-wrapper no-scrollbar">
+                <a href="{{ url_for('index') }}" class="category-item">
+                    <div class="category-box active-blue">
+                        <span class="category-text">Todos</span>
+                    </div>
+                </a>
+
+                {% for cat in categorias %}
+                <a href="{{ url_for('index', search=cat.slug) }}" class="category-item">
+                    <div class="category-box" style="background-image: url('{{ cat.img }}');">
+                        <div class="category-overlay"></div>
+                        <span class="category-text">{{ cat.nome }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
         <h2 class="mb-4">Categorias</h2>
         
         <div class="d-flex gap-2 mb-5">
