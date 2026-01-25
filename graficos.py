@@ -25,37 +25,31 @@ def gerar_grafico_barras(favs, uploads, email_user):
     return f'imagens/graficos/barras_{user_id}.png'
 
 def gerar_ranking_categorias(stats_categorias, email_user):
-    categorias_ordenadas = sorted(stats_categorias.items(), key=lambda x: x[1], reverse=False)
-    
-    labels = [item[0] for item in categorias_ordenadas if item[1] > 0]
-    valores = [item[1] for item in categorias_ordenadas if item[1] > 0]
+    # Filtrar apenas categorias que têm pelo menos 1 favorito
+    labels = [cat for cat, qtd in stats_categorias.items() if qtd > 0]
+    valores = [qtd for cat, qtd in stats_categorias.items() if qtd > 0]
 
     if not valores:
         return None
 
-    # 2. Anatomia da Figura
-    plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(8, 6))
     
-    # Criar barras horizontais
-    barras = plt.barh(labels, valores, color='#F4D35E')
+    # Cores personalizadas (podes adicionar mais se tiveres muitas categorias)
+    cores = ['#F4D35E', '#540B0E', '#E9724C', '#255F85', '#A32858', '#49111C']
     
-    # Adicionar os valores exatos à frente das barras para facilitar a leitura
-    plt.bar_label(barras, padding=3, fontsize=10, fontweight='bold')
-
-    # Customização de rótulos e títulos
-    plt.title('O Teu Ranking de Categorias Favoritas', fontsize=14, pad=15)
-    plt.xlabel('Quantidade de Favoritos', fontsize=12)
-    plt.xlim(0, max(valores) + 1) # Dá um pequeno espaço extra no fim do eixo X
+    # Criar o gráfico de pizza
+    # autopct='%1.1f%%' adiciona a percentagem automaticamente nas fatias
+    plt.pie(valores, labels=labels, autopct='%1.1f%%', startangle=140, colors=cores, 
+            textprops={'fontweight': 'bold'})
     
-    # Ajustar o layout para os nomes das categorias não serem cortados
-    plt.tight_layout()
-
-    # 3. Guardar a Imagem
+    plt.title('Distribuição de Categorias Favoritas', fontsize=14, pad=20)
+    plt.axis('equal')  # Garante que o gráfico seja um círculo perfeito
+    
+    # Guardar ficheiro
     user_id = email_user.replace('@', '_').replace('.', '_')
-    nome_ficheiro = f"ranking_{user_id}.png"
-    caminho = os.path.join('static', 'imagens','graficos', nome_ficheiro)
+    caminho = f'static/imagens/graficos/pizza_{user_id}.png'
+    os.makedirs('static/imagens/graficos', exist_ok=True)
     
-    plt.savefig(caminho)
+    plt.savefig(caminho, transparent=True) # transparent=True ajuda a integrar no design
     plt.close()
-    
-    return f"imagens/graficos/{nome_ficheiro}"
+    return f'imagens/graficos/pizza_{user_id}.png'

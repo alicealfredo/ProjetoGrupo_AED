@@ -92,6 +92,21 @@
                                 </a>
                             </div>
                         </div>
+                        <br>
+                        <div class="comentarios-section">
+                            {% set lista_coments = obter_comentarios(img.photo_image_url) %}
+                            {% for c in lista_coments %}
+                                <p><strong>{{ c.autor }}:</strong> {{ c.texto }}</p>
+                            {% endfor %}
+                        </div>
+
+                        {% if session['user'] %}
+                        <form action="/comentar" method="POST">
+                            <input type="hidden" name="url_foto" value="{{ img.photo_image_url }}">
+                            <input type="text" name="comentario" placeholder="Comentário" required>
+                            <button type="submit">Enviar</button>
+                        </form>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
