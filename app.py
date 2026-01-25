@@ -14,7 +14,7 @@ UTILIZADORES_BIN = "data/utilizadores.bin"
 
 def guardar_utilizador(nome, email, senha):
     linha = f"{nome}|{email}|{senha}\n"
-    with open(UTILIZADORES_BIN, "ab") as f:  # append binário
+    with open(UTILIZADORES_BIN, "ab") as f:
         f.write(linha.encode("utf-8"))
 
 def email_existe(email):
@@ -42,18 +42,16 @@ def verificar_login(email, senha):
 
 def obter_imagens(n=9, query=None):
     imagens = []
-    caminho = 'data/photos.csv'  # confirma que o nome está exatamente assim!
+    caminho = 'data/photos.csv'  
 
     try:
         with open(caminho, 'r', encoding='utf-8') as ficheiro:
-            leitor = csv.DictReader(ficheiro, delimiter='\t')  # separador = TAB
+            leitor = csv.DictReader(ficheiro, delimiter='\t')  
             for linha in leitor:
-                # O (linha.get(...) or '') evita o erro de NoneType
                 url = (linha.get('photo_image_url') or '').strip()
                 if not url:
                     continue
 
-                # Descrição com fallback para ai_description
                 desc = (linha.get('photo_description') or '').strip()
                 if not desc:
                     desc = (linha.get('ai_description') or 'Sem descrição').strip()
@@ -69,7 +67,6 @@ def obter_imagens(n=9, query=None):
                     if q not in texto_total:
                         continue
 
-                # "Categoria" fake: primeira palavra da descrição (ou "Foto" se vazio)
                 primeira_palavra = desc.split()[0].capitalize() if desc.split() else 'Foto'
 
                 imagens.append({
@@ -80,7 +77,6 @@ def obter_imagens(n=9, query=None):
                     'local': local
                 })
 
-        # Se tiver mais do que precisamos → amostra aleatória
         if len(imagens) > n:
             return random.sample(imagens, n)
         
@@ -92,12 +88,11 @@ def obter_imagens(n=9, query=None):
         return [{'erro': f'Erro ao ler o arquivo: {str(e)}'}]
     
 def obter_fotos_por_categoria(slug, quantidade=4):
-    # Procura todas as imagens que correspondem ao filtro
     fotos = obter_imagens(n=100, query=slug) 
     
     if len(fotos) >= quantidade:
         return random.sample(fotos, quantidade)
-    return fotos # Retorna o que encontrar se houver poucas
+    return fotos 
 
 def obter_comentarios(url_foto):
     comentarios = []
@@ -125,10 +120,8 @@ CATEGORIAS_FIXAS = [
 
 @app.route("/")
 def index():
-    # Sincronizando com o name="search" que está no seu index.html
     query = request.args.get('search', '').strip()
     
-    # Se não houver pesquisa, 'obter_imagens' retorna aleatórias (conforme seu código)
     imagens = obter_imagens(n=60, query=query if query else None)
     
     return render_template(
@@ -136,11 +129,10 @@ def index():
         images=imagens,
         query=query,
         categorias=CATEGORIAS_FIXAS,
-        obter_comentarios=obter_comentarios # Passando a lista para o HTML
+        obter_comentarios=obter_comentarios
     )
 
 
-# No app.py, substitua a função favoritar por esta:
 @app.route("/favoritar")
 def favoritar():
     if "user" not in session:
@@ -150,13 +142,11 @@ def favoritar():
     url_foto = request.args.get('url')
     autor = request.args.get('autor', 'Anónimo')
     
-    # IMPORTANTE: Pegar a categoria oficial vinda do HTML, não o título
     categoria = request.args.get('categoria', 'Sem categoria') 
     
     caminho_fav = f'data/favoritos_{email_user}.csv'
     
     with open(caminho_fav, 'a', encoding='utf-8') as f:
-        # Agora guardamos a Categoria na 2ª coluna (partes[1])
         f.write(f"{url_foto}\t{categoria}\t{autor}\n")
         
     return redirect(url_for('index'))
@@ -171,15 +161,12 @@ def remover_favorito():
     caminho_fav = f'data/favoritos_{email_user}.csv'
     
     if os.path.exists(caminho_fav):
-        # 1. Ler todas as linhas atuais
         linhas_restantes = []
         with open(caminho_fav, 'r', encoding='utf-8') as f:
             for linha in f:
-                # Se a URL na linha não for a que queremos remover, mantemos
                 if url_remover not in linha:
                     linhas_restantes.append(linha)
         
-        # 2. Sobreescrever o ficheiro com a nova lista (sem a imagem removida)
         with open(caminho_fav, 'w', encoding='utf-8') as f:
             for linha in linhas_restantes:
                 f.write(linha)
@@ -193,16 +180,12 @@ def dashboard():
 
     email_user = session["user"]["email"]
 
-    # ────────────────────────────────────────────────
-    # Contadores gerais
     count_favs = 0
     count_uploads = 0
     imagens_dashboard = []
 
-    # Novo: contagem por autor (em vez de por categoria)
-    stats_autores = {}   # autor → quantidade de favoritos
+    stats_autores = {}  
 
-    # 1. Carregar Favoritos
     caminho_fav = f'data/favoritos_{email_user}.csv'
     if os.path.exists(caminho_fav):
         with open(caminho_fav, 'r', encoding='utf-8') as f:
@@ -210,21 +193,18 @@ def dashboard():
                 partes = linha.strip().split('\t')
                 if len(partes) >= 3:
                     url = partes[0]
-                    # categoria = partes[1]   ← já não usamos
                     autor = partes[2].strip()
 
                     imagens_dashboard.append({
                         'photo_image_url': url,
-                        'categoria': partes[1] if len(partes)>1 else "—",  # manter compatibilidade
+                        'categoria': partes[1] if len(partes)>1 else "—",
                         'autor': autor,
                         'tipo': 'favorito'
                     })
 
-                    # Contar por autor
                     stats_autores[autor] = stats_autores.get(autor, 0) + 1
                     count_favs += 1
 
-    # 2. Carregar Uploads (mantém-se igual)
     caminho_fotos = 'data/photos.csv'
     if os.path.exists(caminho_fotos):
         with open(caminho_fotos, 'r', encoding='utf-8') as f:
@@ -239,10 +219,8 @@ def dashboard():
                     })
                     count_uploads += 1
 
-    # Gerar gráficos
     url_barras = gerar_grafico_barras(count_favs, count_uploads, email_user)
     
-    # Novo nome da função + novos dados
     url_pizza = gerar_pizza_autores_favoritos(stats_autores, email_user)
 
     return render_template("dashboard.html",
@@ -257,17 +235,14 @@ def upload_imagem():
     if "user" not in session:
         return redirect(url_for('login'))
         
-    # 1. Identificar o utilizador e definir o caminho da pasta individual
     email_user = session["user"]["email"]
-    nome_pasta_user = email_user.replace("@", "_").replace(".", "_") # Limpa caracteres especiais
+    nome_pasta_user = email_user.replace("@", "_").replace(".", "_") 
     caminho_base = 'static/imagens/uploads'
     caminho_user = os.path.join(caminho_base, nome_pasta_user)
     
-    # 2. Criar a pasta do utilizador se não existir
     if not os.path.exists(caminho_user):
         os.makedirs(caminho_user)
     
-    # 3. Processar os dados do formulário
     titulo = request.form.get("titulo")
     descricao = request.form.get("descricao")
     autor = request.form.get("autor") or session["user"]["nome"]
@@ -275,11 +250,9 @@ def upload_imagem():
 
     if ficheiro and ficheiro.filename != '':
         nome_ficheiro = ficheiro.filename.replace(" ", "_")
-        # Guardar o ficheiro dentro da pasta do utilizador
         caminho_final_disco = os.path.join(caminho_user, nome_ficheiro)
         ficheiro.save(caminho_final_disco)
 
-        # 4. Guardar no CSV com o caminho relativo correto para o navegador
         with open('data/photos.csv', 'a', encoding='utf-8') as f:
             url_navegador = f"static/imagens/uploads/{nome_pasta_user}/{nome_ficheiro}"
             f.write(f"\n{url_navegador}\t{descricao}\t{titulo}\t{autor}\tLocal\t{email_user}")
@@ -302,9 +275,7 @@ def remover_upload():
         with open(caminho_csv, 'r', encoding='utf-8') as f:
             for linha in f:
                 partes = linha.strip().split('\t')
-                # Validação: URL coincide e o e-mail (coluna 6) é do dono
                 if len(partes) >= 6 and partes[0] == url_remover and partes[5] == email_user:
-                    # Remove o ficheiro físico (limpa a barra inicial para o OS)
                     caminho_fisico = partes[0].lstrip('/')
                     if os.path.exists(caminho_fisico):
                         os.remove(caminho_fisico)
@@ -321,20 +292,16 @@ def remover_upload():
 
 @app.route("/categorias")
 def categorias():
-    # 1. Obter todas as imagens uma única vez para contar
     todas = obter_imagens(n=15000) 
     
     categorias_processadas = []
     for cat in CATEGORIAS_FIXAS:
         nova_cat = cat.copy()
         
-        # Filtra as fotos que pertencem a esta categoria
         fotos_da_cat = [img for img in todas if cat['slug'] in img['photo_description'].lower()]
         
-        # Define o contador real
         nova_cat['total'] = len(fotos_da_cat)
         
-        # Define as imagens de capa e miniaturas (como fizemos antes)
         if len(fotos_da_cat) >= 4:
             amostra = random.sample(fotos_da_cat, 4)
             nova_cat['capa'] = amostra[0]['photo_image_url']
@@ -358,11 +325,9 @@ def login():
         if user_data:
             session["user"] = user_data
             
-            # NOVO: Se o email for o do admin, vai para o painel de admin
             if user_data['email'] == 'admin@gmail.com':
                 return redirect(url_for("admin"))
             
-            # Caso contrário, vai para categorias como já estava
             return redirect(url_for("categorias"))
         else:
             return "Login inválido!"
@@ -419,22 +384,18 @@ def editar_perfil():
         linhas_atualizadas = []
         utilizador_encontrado = False
 
-        # 1. Ler e atualizar os dados
         if os.path.exists(UTILIZADORES_BIN):
             with open(UTILIZADORES_BIN, "rb") as f:
                 for linha in f:
                     nome, email, senha = linha.decode("utf-8").strip().split("|")
                     if email == email_atual:
-                        # Se a senha estiver vazia no form, mantém a antiga
                         senha_final = nova_senha if nova_senha else senha
                         nova_linha = f"{novo_nome}|{email}|{senha_final}\n"
                         linhas_atualizadas.append(nova_linha.encode("utf-8"))
-                        # Atualiza a sessão para o novo nome aparecer logo
                         session["user"]["nome"] = novo_nome
                     else:
                         linhas_atualizadas.append(linha)
 
-        # 2. Reescrever o ficheiro binário
         with open(UTILIZADORES_BIN, "wb") as f:
             for l in linhas_atualizadas:
                 f.write(l)
@@ -448,7 +409,6 @@ def admin():
     if "user" not in session or session["user"]["email"] != "admin@gmail.com":
         return redirect(url_for('login'))
 
-    # 1. Estatísticas de Utilizadores
     users_list = []
     if os.path.exists(UTILIZADORES_BIN):
         with open(UTILIZADORES_BIN, "rb") as f:
@@ -457,12 +417,10 @@ def admin():
                 if len(dados) >= 2:
                     users_list.append({'nome': dados[0], 'email': dados[1]})
 
-    # 2. Estatísticas e Listagem de Fotos (Moderação)
     todas_fotos = []
     caminho_csv = 'data/photos.csv'
     if os.path.exists(caminho_csv):
         with open(caminho_csv, 'r', encoding='utf-8') as f:
-            # Pula o cabeçalho se houver, ou trata como DictReader
             reader = csv.DictReader(f, delimiter='\t')
             for row in reader:
         
@@ -470,7 +428,7 @@ def admin():
                     'url': row.get('photo_image_url'),
                     'titulo': row.get('photo_description', 'Sem título'),
                     'autor': row.get('photographer_username', 'Anónimo'),
-                    'dono_email': row.get('email_user', 'Sistema') # Requer que o upload grave o email
+                    'dono_email': row.get('email_user', 'Sistema') 
                 })
 
                 if len(todas_fotos)>=50:
@@ -542,10 +500,8 @@ def comentar():
     if texto:
         caminho_comentarios = 'data/comentarios.csv'
         with open(caminho_comentarios, 'a', encoding='utf-8') as f:
-            # Usamos | como separador para evitar conflitos com vírgulas no texto
             f.write(f"{url_foto}|{utilizador}|{texto}\n")
             
-    # Redireciona de volta para a página onde estava
     return redirect(request.referrer or url_for('index'))
 
 @app.route("/logout")
