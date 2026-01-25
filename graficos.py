@@ -17,16 +17,14 @@ def gerar_grafico_barras(favs, uploads, email_user):
     
     # Guardar ficheiro
     user_id = email_user.replace('@', '_').replace('.', '_')
-    caminho = f'static/imagens/gráficos/barras_{user_id}.png'
-    os.makedirs('static/imagens/gráficos', exist_ok=True)
+    caminho = f'static/imagens/graficos/barras_{user_id}.png'
+    os.makedirs('static/imagens/graficos', exist_ok=True)
     
     plt.savefig(caminho)
     plt.close() # Limpar memória
-    return f'static/imagens/graficos/barras_{user_id}.png'
+    return f'imagens/graficos/barras_{user_id}.png'
 
 def gerar_ranking_categorias(stats_categorias, email_user):
-    # 1. Ordenar os dados para o ranking (do maior para o menor)
-    # stats_categorias deve ser um dicionário: {"Natureza": 5, "Arte": 2, ...}
     categorias_ordenadas = sorted(stats_categorias.items(), key=lambda x: x[1], reverse=False)
     
     labels = [item[0] for item in categorias_ordenadas if item[1] > 0]
@@ -55,9 +53,9 @@ def gerar_ranking_categorias(stats_categorias, email_user):
     # 3. Guardar a Imagem
     user_id = email_user.replace('@', '_').replace('.', '_')
     nome_ficheiro = f"ranking_{user_id}.png"
-    caminho = os.path.join('static', 'imagens','gráficos', nome_ficheiro)
+    caminho = os.path.join('static', 'imagens','graficos', nome_ficheiro)
     
     plt.savefig(caminho)
     plt.close()
     
-    return f"static/imagens/gráficos/{nome_ficheiro}"
+    return f"imagens/graficos/{nome_ficheiro}"
