@@ -2,6 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import csv
 import random
 import os
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from graficos import gerar_grafico_barras, gerar_ranking_categorias
 
 app = Flask(__name__)
 app.secret_key = "chave-super-secreta"
@@ -38,7 +42,7 @@ def verificar_login(email, senha):
 
 def obter_imagens(n=9, query=None):
     imagens = []
-    caminho = 'data/photos.csv000'  # confirma que o nome está exatamente assim!
+    caminho = 'data/photos.csv'  # confirma que o nome está exatamente assim!
 
     try:
         with open(caminho, 'r', encoding='utf-8') as ficheiro:
@@ -173,12 +177,29 @@ def dashboard():
         return redirect(url_for('login'))
 
     email_user = session["user"]["email"]
+
+    CATEGORIAS_FIXAS = [
+        {"nome": "Natureza", "slug": "nature"},
+        {"nome": "Arquitetura", "slug": "architecture"},
+        {"nome": "Pessoas", "slug": "people"},
+        {"nome": "Paisagens", "slug": "landscape"},
+        {"nome": "Animais", "slug": "animal"},
+        {"nome": "Arte", "slug": "art"}
+    ]
+
+    # Inicializar contadores
+    nomes_oficiais = [c["nome"] for c in CATEGORIAS_FIXAS]
+    stats_categorias = {nome: 0 for nome in nomes_oficiais}
+
+    count_favs=0
+    count_uploads=0
     imagens_dashboard = []
     
     # 1. Carregar Favoritos (Código que já tem)
     caminho_fav = f'data/favoritos_{email_user}.csv'
     if os.path.exists(caminho_fav):
         with open(caminho_fav, 'r', encoding='utf-8') as f:
+
             for linha in f:
                 partes = linha.strip().split('\t')
                 if len(partes) >= 3:
@@ -188,9 +209,13 @@ def dashboard():
                         'autor': partes[2],
                         'tipo': 'favorito'
                     })
+                    cat = partes[1] # A categoria está na 2ª coluna
+                    count_favs += 1
+                    if cat in stats_categorias:
+                        stats_categorias[cat] += 1
 
     # 2. Carregar Uploads Próprios
-    caminho_fotos = 'data/photos.csv000'
+    caminho_fotos = 'data/photos.csv'
     if os.path.exists(caminho_fotos):
         with open(caminho_fotos, 'r', encoding='utf-8') as f:
             # Pulamos o cabeçalho se existir ou tratamos erro
@@ -205,7 +230,17 @@ def dashboard():
                         'tipo': 'upload'
                     })
 
-    return render_template("dashboard.html", images=imagens_dashboard)
+                    count_uploads += 1
+    
+    url_barras = gerar_grafico_barras(count_favs, count_uploads, email_user)
+    url_pizza = gerar_ranking_categorias(stats_categorias, email_user)
+
+    return render_template("dashboard.html",
+                           count_favs=count_favs,
+                           count_uploads=count_uploads,
+                           images=imagens_dashboard,
+                           url_barras=url_barras,
+                           url_pizza=url_pizza,)
 
 @app.route("/upload", methods=["POST"])
 def upload_imagem():
@@ -215,7 +250,7 @@ def upload_imagem():
     # 1. Identificar o utilizador e definir o caminho da pasta individual
     email_user = session["user"]["email"]
     nome_pasta_user = email_user.replace("@", "_").replace(".", "_") # Limpa caracteres especiais
-    caminho_base = 'static/uploads'
+    caminho_base = 'static/imagens/uploads'
     caminho_user = os.path.join(caminho_base, nome_pasta_user)
     
     # 2. Criar a pasta do utilizador se não existir
@@ -235,9 +270,8 @@ def upload_imagem():
         ficheiro.save(caminho_final_disco)
 
         # 4. Guardar no CSV com o caminho relativo correto para o navegador
-        with open('data/photos.csv000', 'a', encoding='utf-8') as f:
-            # A URL agora inclui a subpasta do utilizador
-            url_navegador = f"/static/uploads/{nome_pasta_user}/{nome_ficheiro}"
+        with open('data/photos.csv', 'a', encoding='utf-8') as f:
+            url_navegador = f"static/imagens/uploads/{nome_pasta_user}/{nome_ficheiro}"
             f.write(f"\n{url_navegador}\t{descricao}\t{titulo}\t{autor}\tLocal\t{email_user}")
 
     return redirect(url_for('dashboard'))
@@ -249,7 +283,7 @@ def remover_upload():
     
     email_user = session["user"]["email"]
     url_remover = request.args.get('url')
-    caminho_csv = 'data/photos.csv000'
+    caminho_csv = 'data/photos.csv'
     
     if os.path.exists(caminho_csv):
         linhas_restantes = []
@@ -364,7 +398,7 @@ def admin():
 
     # 2. Estatísticas e Listagem de Fotos (Moderação)
     todas_fotos = []
-    caminho_csv = 'data/photos.csv000'
+    caminho_csv = 'data/photos.csv'
     if os.path.exists(caminho_csv):
         with open(caminho_csv, 'r', encoding='utf-8') as f:
             # Pula o cabeçalho se houver, ou trata como DictReader

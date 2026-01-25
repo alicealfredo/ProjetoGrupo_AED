@@ -36,9 +36,38 @@
         </nav>
     </header>
 
-    <main class="container mt-5 pt-5">
+    <main class="container mt-5">
         <div class="row">
-            <div class="col-md-4" >
+            <div class="card p-3 shadow-sm border-0" style="border-radius: 15px; width: 500px; height: auto; align-items: center; justify-content: center;">
+                <h4 class="text-center">Resumo de Atividade</h4>
+                <img src="{{ url_for('static', filename=url_barras) }}" class="img-fluid">
+            </div>
+            
+            <div  class="col-md-4" style="border-radius: 15px; width: 490px; height: auto; align-items: center; justify-content: center;">
+                <div class="card p-4 shadow-sm border-0" style="border-radius: 15px; background-color: white;">
+                    <h4 class="mb-3 text-center">Análise de Interesses</h4>
+                    {% if url_pizza %}
+                        <img src="{{ url_for('static', filename=url_pizza) }}" class="img-fluid">
+                    {% else %}
+                        <p class="text-center text-muted my-auto">Sem dados suficientes.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-5 text-center" style="background-color: #F4D35E; border: none; border-radius: 15px;">
+                    <h2>{{ count_favs }}</h2>
+                    <h4>Favoritos</h4>
+                </div> 
+                <br>
+                <div class="card p-5 text-center" style="background-color: #540B0E; border: none; border-radius: 15px; color: #F4D35E;">
+                    <h2>{{ count_uploads }}</h2>
+                    <h4>Uploads</h4>
+                </div> 
+            </div>
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col-md-4">
                 <div class="card p-4 shadow-sm border-0" style="border-radius: 15px; background-color: #F4D35E;">
                     <h3 class="mb-4">Partilhar Imagem</h3>
                     <form action="/upload" method="POST" enctype="multipart/form-data">
@@ -62,7 +91,6 @@
                     </form>
                 </div>
             </div>
-
             <div class="col-md-8">
                 <h4 class="mb-4">A Minha Galeria <span style="background-color: #540B0E;padding: 5px 10px;border: none;border-radius: 5px;font-weight: bold;color: #F4D35E;">{{ images|length }}</span></h4>
                 
