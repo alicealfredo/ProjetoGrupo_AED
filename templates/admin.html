@@ -79,6 +79,44 @@
             </table>
         </div>
 
+        <div class="card p-4 shadow-sm border-0 mt-5" style="border-radius: 15px;">
+            <h4 class="mb-3">Todos os Comentários ({{ comentarios|length }})</h4>
+            
+            {% if comentarios %}
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Autor</th>
+                            <th>Comentário</th>
+                            <th>Foto URL</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for c in comentarios %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ c.autor }}</td>
+                            <td>{{ c.texto | truncate(60) }}</td>
+                            <td><small class="text-muted">{{ c.url_foto | truncate(50) }}</small></td>
+                            <td>
+                                <a href="{{ url_for('apagar_comentario_admin', comment_id=c.id) }}"
+                                class="btn btn-sm btn-danger">
+                                    Apagar
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted mt-3">Ainda não existem comentários no sistema.</p>
+            {% endif %}
+        </div>
+
         <h4 class="mb-3">Moderação de Conteúdo</h4>
         <div class="row row-cols-1 row-cols-md-3 g-3">
             {% for foto in photos %}

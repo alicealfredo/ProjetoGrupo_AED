@@ -24,32 +24,56 @@ def gerar_grafico_barras(favs, uploads, email_user):
     plt.close() # Limpar memória
     return f'imagens/graficos/barras_{user_id}.png'
 
-def gerar_ranking_categorias(stats_categorias, email_user):
-    # Filtrar apenas categorias que têm pelo menos 1 favorito
-    labels = [cat for cat, qtd in stats_categorias.items() if qtd > 0]
-    valores = [qtd for cat, qtd in stats_categorias.items() if qtd > 0]
+def gerar_pizza_autores_favoritos(stats_autores, email_user):
+    if not stats_autores:
+        # Caso não haja favoritos
+        plt.figure(figsize=(8, 6))
+        plt.text(0.5, 0.5, 'Sem favoritos\npara mostrar\nautores preferidos!', 
+                 ha='center', va='center', fontsize=14, fontweight='bold',
+                 transform=plt.gca().transAxes)
+        plt.axis('off')
+    else:
+        # Ordenar por quantidade (descendente) → top autores primeiro
+        autores_ordenados = sorted(stats_autores.items(), key=lambda x: x[1], reverse=True)
+        labels = [autor for autor, qtd in autores_ordenados]
+        valores = [qtd for autor, qtd in autores_ordenados]
 
-    if not valores:
-        return None
+        # Limitar a exibição (ex: top 8) para não ficar confuso
+        if len(labels) > 8:
+            outros = sum(valores[8:])
+            labels = labels[:8] + ['Outros']
+            valores = valores[:8] + [outros]
 
-    plt.figure(figsize=(8, 6))
-    
-    # Cores personalizadas (podes adicionar mais se tiveres muitas categorias)
-    cores = ['#F4D35E', '#540B0E', '#E9724C', '#255F85', '#A32858', '#49111C']
-    
-    # Criar o gráfico de pizza
-    # autopct='%1.1f%%' adiciona a percentagem automaticamente nas fatias
-    plt.pie(valores, labels=labels, autopct='%1.1f%%', startangle=140, colors=cores, 
-            textprops={'fontweight': 'bold'})
-    
-    plt.title('Distribuição de Categorias Favoritas', fontsize=14, pad=20)
-    plt.axis('equal')  # Garante que o gráfico seja um círculo perfeito
-    
-    # Guardar ficheiro
+        plt.figure(figsize=(8, 6))
+        
+        cores = ['#F4D35E', '#540B0E', '#E9724C', '#255F85', '#A32858', 
+                 '#49111C', '#6B7280', '#9CA3AF', '#D1D5DB']  # + cinzentos para "Outros"
+
+        wedges, texts, autotexts = plt.pie(
+            valores,
+            labels=labels,
+            autopct='%1.1f%%',
+            startangle=140,
+            colors=cores[:len(valores)],
+            textprops={'fontsize': 10, 'fontweight': 'bold'},
+            pctdistance=0.78
+        )
+
+        # Melhorar legibilidade das percentagens
+        for autotext in autotexts:
+            autotext.set_color('white')
+            autotext.set_fontweight('bold')
+
+        plt.title('Autores Mais Favoritados', fontsize=14, pad=20)
+        plt.axis('equal')
+
+    # Guardar
     user_id = email_user.replace('@', '_').replace('.', '_')
-    caminho = f'static/imagens/graficos/pizza_{user_id}.png'
-    os.makedirs('static/imagens/graficos', exist_ok=True)
+    caminho_base = 'static/imagens/graficos'
+    os.makedirs(caminho_base, exist_ok=True)
+    caminho = f'{caminho_base}/pizza_autores_{user_id}.png'
     
-    plt.savefig(caminho, transparent=True) # transparent=True ajuda a integrar no design
+    plt.savefig(caminho, transparent=True, bbox_inches='tight', dpi=110)
     plt.close()
-    return f'imagens/graficos/pizza_{user_id}.png'
+
+    return f'imagens/graficos/pizza_autores_{user_id}.png'

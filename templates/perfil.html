@@ -39,9 +39,24 @@
         <h1>Bem-vindo(a) {{ user.nome }}</h1>
         <p><strong>Nome:</strong> {{ user.nome }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Categorias:</strong> {{ interesses }}</p>
 
         <a href="{{ url_for('editar_perfil') }}">Editar Informações</a> <a href="{{ url_for('logout') }}">Sair</a>
+
+        <h4 class="mb-4 mt-5">Meus Comentários ({{ meus_comentarios|length }})</h4>
+
+        {% if meus_comentarios %}
+            <div class="list-group">
+            {% for com in meus_comentarios %}
+                <div class="list-group-item">
+                    <small class="text-muted">Foto:</small><br>
+                    <img src="{{ com.url_foto }}" alt="foto" style="max-height: 80px; object-fit: cover; border-radius: 6px;">
+                    <p class="mb-1 mt-2"><strong>Meu comentário:</strong> {{ com.texto }}</p>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">Ainda não deixaste comentários.</p>
+        {% endif %}
     </main>
 </body>
 </html>

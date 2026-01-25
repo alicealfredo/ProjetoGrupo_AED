@@ -5,7 +5,7 @@ import os
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from graficos import gerar_grafico_barras, gerar_ranking_categorias
+from graficos import gerar_grafico_barras, gerar_pizza_autores_favoritos
 
 app = Flask(__name__)
 app.secret_key = "chave-super-secreta"
@@ -151,7 +151,7 @@ def favoritar():
     autor = request.args.get('autor', 'Anónimo')
     
     # IMPORTANTE: Pegar a categoria oficial vinda do HTML, não o título
-    categoria = request.args.get('categoria', 'Arte') 
+    categoria = request.args.get('categoria', 'Sem categoria') 
     
     caminho_fav = f'data/favoritos_{email_user}.csv'
     
@@ -193,51 +193,43 @@ def dashboard():
 
     email_user = session["user"]["email"]
 
-    CATEGORIAS_FIXAS = [
-        {"nome": "Natureza", "slug": "nature"},
-        {"nome": "Arquitetura", "slug": "architecture"},
-        {"nome": "Pessoas", "slug": "people"},
-        {"nome": "Paisagens", "slug": "landscape"},
-        {"nome": "Animais", "slug": "animal"},
-        {"nome": "Arte", "slug": "art"}
-    ]
-
-    # Inicializar contadores
-    nomes_oficiais = [c["nome"] for c in CATEGORIAS_FIXAS]
-    stats_categorias = {nome: 0 for nome in nomes_oficiais}
-
-    count_favs=0
-    count_uploads=0
+    # ────────────────────────────────────────────────
+    # Contadores gerais
+    count_favs = 0
+    count_uploads = 0
     imagens_dashboard = []
-    
-    # 1. Carregar Favoritos (Código que já tem)
+
+    # Novo: contagem por autor (em vez de por categoria)
+    stats_autores = {}   # autor → quantidade de favoritos
+
+    # 1. Carregar Favoritos
     caminho_fav = f'data/favoritos_{email_user}.csv'
     if os.path.exists(caminho_fav):
         with open(caminho_fav, 'r', encoding='utf-8') as f:
-
             for linha in f:
                 partes = linha.strip().split('\t')
                 if len(partes) >= 3:
+                    url = partes[0]
+                    # categoria = partes[1]   ← já não usamos
+                    autor = partes[2].strip()
+
                     imagens_dashboard.append({
-                        'photo_image_url': partes[0],
-                        'categoria': partes[1],
-                        'autor': partes[2],
+                        'photo_image_url': url,
+                        'categoria': partes[1] if len(partes)>1 else "—",  # manter compatibilidade
+                        'autor': autor,
                         'tipo': 'favorito'
                     })
-                    cat = partes[1] # A categoria está na 2ª coluna
-                    count_favs += 1
-                    cat_lida = partes[1].strip() 
-                    if cat_lida in stats_categorias: 
-                        stats_categorias[cat_lida] += 1 
 
-    # 2. Carregar Uploads Próprios
+                    # Contar por autor
+                    stats_autores[autor] = stats_autores.get(autor, 0) + 1
+                    count_favs += 1
+
+    # 2. Carregar Uploads (mantém-se igual)
     caminho_fotos = 'data/photos.csv'
     if os.path.exists(caminho_fotos):
         with open(caminho_fotos, 'r', encoding='utf-8') as f:
-            # Pulamos o cabeçalho se existir ou tratamos erro
             for linha in f:
                 partes = linha.strip().split('\t')
-                # Verificamos se a linha tem o nosso e-mail no final (campo 5)
                 if len(partes) >= 6 and partes[5] == email_user:
                     imagens_dashboard.append({
                         'photo_image_url': partes[0],
@@ -245,18 +237,20 @@ def dashboard():
                         'autor': partes[3],
                         'tipo': 'upload'
                     })
-
                     count_uploads += 1
-    
+
+    # Gerar gráficos
     url_barras = gerar_grafico_barras(count_favs, count_uploads, email_user)
-    url_pizza = gerar_ranking_categorias(stats_categorias, email_user)
+    
+    # Novo nome da função + novos dados
+    url_pizza = gerar_pizza_autores_favoritos(stats_autores, email_user)
 
     return render_template("dashboard.html",
                            count_favs=count_favs,
                            count_uploads=count_uploads,
                            images=imagens_dashboard,
                            url_barras=url_barras,
-                           url_pizza=url_pizza,)
+                           url_pizza=url_pizza)
 
 @app.route("/upload", methods=["POST"])
 def upload_imagem():
@@ -395,8 +389,21 @@ def registo():
 def perfil():
     if "user" not in session:
         return redirect(url_for("login"))
+    
+    meus_comentarios = []
+    caminho_com = 'data/comentarios.csv'
+    if os.path.exists(caminho_com):
+        with open(caminho_com, 'r', encoding='utf-8') as f:
+            for linha in f:
+                partes = linha.strip().split('|')
+                if len(partes) >= 3 and partes[1] == session["user"]["nome"]:
+                    meus_comentarios.append({
+                        'url_foto': partes[0],
+                        'texto': partes[2],
+                        'data': "sem data"
+                    })
 
-    return render_template("perfil.html", user=session["user"])
+    return render_template("perfil.html", user=session["user"], meus_comentarios=meus_comentarios)
 
 @app.route("/editar_perfil", methods=["GET", "POST"])
 def editar_perfil():
@@ -469,10 +476,25 @@ def admin():
                 if len(todas_fotos)>=50:
                     break
 
+    todos_comentarios = []
+    caminho_com = 'data/comentarios.csv'
+    if os.path.exists(caminho_com):
+        with open(caminho_com, 'r', encoding='utf-8') as f:
+            for i, linha in enumerate(f):
+                partes = linha.strip().split('|')
+                if len(partes) >= 3:
+                    todos_comentarios.append({
+                        'id': i,
+                        'url_foto': partes[0],
+                        'autor': partes[1],
+                        'texto': partes[2],
+                    })
+
     return render_template("admin.html", 
                            users=users_list, 
                            photos=todas_fotos,
-                           stats={'total_users': len(users_list), 'total_photos': len(todas_fotos)})
+                           comentarios=todos_comentarios,
+                           stats={'total_users': len(users_list),'total_photos': len(todas_fotos)})
 
 @app.route("/admin/banir/<email>")
 def banir_utilizador(email):
@@ -490,6 +512,24 @@ def banir_utilizador(email):
             f.write(linha)
     return redirect(url_for('admin_panel'))
 
+@app.route("/admin/comentario/apagar/<int:comment_id>")
+def apagar_comentario_admin(comment_id):
+    if "user" not in session or session["user"]["email"] != "admin@gmail.com":
+        return redirect(url_for('login'))
+
+    caminho = 'data/comentarios.csv'
+    linhas = []
+    
+    with open(caminho, 'r', encoding='utf-8') as f:
+        for i, linha in enumerate(f):
+            if i != comment_id:
+                linhas.append(linha)
+
+    with open(caminho, 'w', encoding='utf-8') as f:
+        f.writelines(linhas)
+
+    return redirect(url_for('admin'))
+
 @app.route("/comentar", methods=["POST"])
 def comentar():
     if "user" not in session:
@@ -498,7 +538,7 @@ def comentar():
     utilizador = session["user"]["nome"]
     url_foto = request.form.get("url_foto")
     texto = request.form.get("comentario").strip()
-    
+        
     if texto:
         caminho_comentarios = 'data/comentarios.csv'
         with open(caminho_comentarios, 'a', encoding='utf-8') as f:

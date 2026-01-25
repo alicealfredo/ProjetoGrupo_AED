@@ -80,11 +80,11 @@
                             {% if img.local %} • {{ img.local }}{% endif %}
                         </p>
                         <div class="d-flex justify-content-between m-10">
-                            <a href="{{ url_for('favoritar', url=img.photo_image_url) }}" class="card-link" id="link">
+                            <a href="{{ url_for('index', search=img.categoria) }}" class="card-link" id="link">
                                 Ver mais {{ img.categoria }}
                             </a>
                             <div id="iconsImage">
-                                <a href="{{ url_for('favoritar', url=img.photo_image_url, autor=img.autor, titulo=img.categoria) }}" class="card-link">
+                                <a href="{{ url_for('favoritar', url=img.photo_image_url, autor=img.autor, categoria=img.categoria) }}" class="card-link">
                                     <img src="{{ url_for('static', filename='imagens/icons/estrela.svg') }}" alt="Favoritar">
                                 </a>
                                 <a href="#" class="card-link">
